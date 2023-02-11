@@ -3,6 +3,7 @@ function getRand(){
 }
 
 // Partie ORDINATEUR :
+
 function getComputerChoice(){
     let choice=getRand();
     switch(choice){
@@ -12,94 +13,95 @@ function getComputerChoice(){
     }
 }
 
-// Partie JOUEUR :
-
-function getUserChoice(){
-    return prompt("Rock, paper, or scissors?");
-}
-
 // Partie Manche :
-function PLAY(playerSelection,computerSelection){
 
-    playerSelection = playerSelection.toLowerCase();
+
+const rockButton = document.querySelector('#rock');
+const paperButton = document.querySelector('#paper');
+const scissorsButton = document.querySelector('#scissors');
+
+
+
+rockButton.addEventListener('click', function() {
+    game('rock',getComputerChoice());
+});
+  
+  paperButton.addEventListener('click', function() {
+    game('paper',getComputerChoice());
+});
+  
+  scissorsButton.addEventListener('click', function() {
+    game('scissors',getComputerChoice());
+})
+
+const resultsDiv = document.querySelector('#results');
+
+function playRound(playerSelection,computerSelection){
+
+    let result;
 
     if(playerSelection == computerSelection){
-        return "it's a Tie rematch";
+        result = "it's a Tie rematch";
     }else if(playerSelection == "rock"){
 
         if(computerSelection == "paper"){
-            return "You lose Paper beats rock"
+            result =  "You lose Paper beats rock"
         }else{
-            return "You win!! rock beats rock"
+            result =  "You win!! rock beats rock"
         }
 
     }else if(playerSelection == "paper"){
 
         if(computerSelection == "rock"){
-            return "You win!! Paper beats rock"
+            result =  "You win!! Paper beats rock"
         }else{
-            return "You lose Scissors beats paper"
+            result =  "You lose Scissors beats paper"
         }
 
     }else if (playerSelection === "scissors") {
 
         if (computerSelection === "paper") {
-            return "You win!! Scissors beats Paper";
+            result =  "You win!! Scissors beats Paper";
         } else {
-            return "You lose Rock beats Scissors";
+            result =  "You lose Rock beats Scissors";
         }
     }
+
+    resultsDiv.innerHTML = result;
+    return result;
+
 }
 
 // Fonction JEU :
 
-function game(){
+let playerWins = 0;
+let computerWins = 0;
 
-    let Wins = 0;
-    let Loses = 0;
-    let Tries = 1;
+    function game(playerSelection,computerSelection) {
 
-    let stop = 1;
-
-    while(stop){
-
-        for(let i=0;i<5;i++){
-            let playerSelection = getUserChoice();
-            let computerSelection = getComputerChoice();
-
-            console.log(`Round ${i+1} : `);
-            console.log(`Player choice: ${playerSelection}`);
-            console.log(`Computer choice: ${computerSelection}`);
-
-            let result = PLAY(playerSelection,computerSelection);
-            if(result.startsWith("You win")){
-                Wins++;
-            }else if(result.startsWith("You lose")){ 
-                Loses++;          
-            }
+        
+        let result = playRound(playerSelection, computerSelection);
+    
+        if (result.startsWith("You win")) {
+            playerWins++;
+        } else if (result.startsWith("You lose")) {
+            computerWins++;
         }
-        console.log(`win : ${Wins}`);
-        console.log(`Loses : ${Loses}`);
+        console.log(playerWins);
+        resultsDiv.innerHTML = `Score: Player ${playerWins} - Computer ${computerWins}<br> ${result}`;
+        
 
-        if(Wins>Loses){
-            alert("You won !! \n CONGRATS");
-            stop = 0;
-        }else{
-            alert("You lost it !! \n Is the computer better than you at this point litte peace of shit");
-            let answering = prompt("WANNA REVENGE : 'yes or no' ");
-            answering = answering.toLowerCase();
-            if (answering.startsWith("yes")){
-                stop = 1;
-                Tries++;
-                console.log(`It is your ${Tries} try GO FOR IT`);
-            }else{
-                stop = 0;
-                console.log("What a loser");
-            }
-        }       
+    
+        if (playerWins === 5) {
+            resultsDiv.innerHTML = `Congratulations, you win! Player: ${playerWins} Computer: ${computerWins}`;
+            playerWins = 0;
+            computerWins = 0;
+        } else if (computerWins === 5) {
+            resultsDiv.innerHTML = `You lose! Player: ${playerWins} Computer: ${computerWins}`;
+            playerWins = 0;
+            computerWins = 0;
+        }
     }
-}
+
 
 // JEU 
-
-game();
